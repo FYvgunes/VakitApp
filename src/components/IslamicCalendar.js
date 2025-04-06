@@ -15,29 +15,23 @@ import {
 import {
   Close as CloseIcon,
   Event as EventIcon,
-  Notifications as NotificationIcon
+  Star as StarIcon
 } from '@mui/icons-material';
+import { getIslamicHolidays, formatHolidayDate } from '../services/islamicCalendarService';
 
 function IslamicCalendar({ open, onClose }) {
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const holidays = getIslamicHolidays();
 
-  const islamicEvents = [
-    {
-      name: 'Ramazan Başlangıcı',
-      date: '12 Mart 2024',
-      hijriDate: '1 Ramazan 1445',
-      description: 'Ramazan ayının başlangıcı',
-      type: 'major'
-    },
-    {
-      name: 'Kadir Gecesi',
-      date: '5 Nisan 2024',
-      hijriDate: '27 Ramazan 1445',
-      description: 'Bin aydan daha hayırlı gece',
-      type: 'special'
-    },
-    // ... diğer önemli günler
-  ];
+  const getImportanceColor = (importance) => {
+    switch (importance) {
+      case 'high':
+        return 'error';
+      case 'medium':
+        return 'primary';
+      default:
+        return 'default';
+    }
+  };
 
   return (
     <Dialog
@@ -45,69 +39,83 @@ function IslamicCalendar({ open, onClose }) {
       onClose={onClose}
       maxWidth="md"
       fullWidth
+      PaperProps={{
+        sx: {
+          height: '90vh',
+          maxHeight: '90vh'
+        }
+      }}
     >
-      <DialogTitle>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          borderBottom: 1,
+          borderColor: 'divider'
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <EventIcon color="primary" />
           <Typography variant="h6">Dini Günler Takvimi</Typography>
-          <IconButton onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
         </Box>
+        <IconButton onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
 
-      <DialogContent>
+      <DialogContent sx={{ p: 3 }}>
         <Grid container spacing={2}>
-          {islamicEvents.map((event, index) => (
-            <Grid item xs={12} md={6} key={index}>
-              <Card 
-                sx={{ 
+          {holidays.map((holiday) => (
+            <Grid item xs={12} md={6} key={holiday.id}>
+              <Card
+                sx={{
                   height: '100%',
-                  bgcolor: event.type === 'major' 
-                    ? 'primary.main' 
-                    : event.type === 'special'
-                      ? 'secondary.main'
-                      : 'background.paper',
-                  color: event.type === 'major' || event.type === 'special'
-                    ? 'white'
-                    : 'text.primary',
+                  transition: 'transform 0.2s',
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    transition: 'transform 0.2s'
+                    boxShadow: 3
                   }
                 }}
               >
                 <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                    <EventIcon />
-                    <Typography variant="h6">{event.name}</Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                    <Typography variant="h6" gutterBottom>
+                      {holiday.name}
+                    </Typography>
+                    {holiday.importance === 'high' && (
+                      <StarIcon color="error" />
+                    )}
                   </Box>
-                  
-                  <Divider sx={{ my: 1, borderColor: 'rgba(255,255,255,0.2)' }} />
-                  
-                  <Typography variant="body1" sx={{ mb: 1 }}>
-                    {event.date}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 2, opacity: 0.8 }}>
-                    {event.hijriDate}
-                  </Typography>
-                  
-                  <Typography variant="body2" sx={{ mb: 2 }}>
-                    {event.description}
+
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary" 
+                    sx={{ mb: 2 }}
+                  >
+                    {holiday.description}
                   </Typography>
 
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Chip 
-                      icon={<NotificationIcon />}
-                      label="Hatırlatıcı Ekle"
-                      onClick={() => {}}
-                      sx={{ 
-                        bgcolor: 'rgba(255,255,255,0.1)',
-                        color: 'inherit',
-                        '&:hover': {
-                          bgcolor: 'rgba(255,255,255,0.2)'
-                        }
-                      }}
-                    />
+                  <Divider sx={{ my: 2 }} />
+
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="subtitle1" color="primary">
+                      {formatHolidayDate(holiday.date)}
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Chip 
+                        label={holiday.type === 'holiday' ? 'Bayram' : 'Kandil'}
+                        color={getImportanceColor(holiday.importance)}
+                        size="small"
+                      />
+                      {holiday.duration && (
+                        <Chip 
+                          label={`${holiday.duration} gün`}
+                          variant="outlined"
+                          size="small"
+                        />
+                      )}
+                    </Box>
                   </Box>
                 </CardContent>
               </Card>

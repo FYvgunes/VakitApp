@@ -16,7 +16,9 @@ import {
   Tooltip,
   CircularProgress,
   Box,
-  Portal
+  Portal,
+  Card,
+  CardContent
 } from '@mui/material';
 import {
   Notifications as NotificationIcon,
@@ -33,6 +35,7 @@ import {
 import { adhanService } from '../services/adhanService';
 import { findNearbyMosques } from '../services/mosqueService';
 import DuaLibrary from './DuaLibrary';
+import IslamicCalendar from './IslamicCalendar';
 
 function Features() {
   const [mosqueDialogOpen, setMosqueDialogOpen] = useState(false);
@@ -45,7 +48,7 @@ function Features() {
   const [tasbihCount, setTasbihCount] = useState(0);
   const [tasbihDialogOpen, setTasbihDialogOpen] = useState(false);
   const [duaDialogOpen, setDuaDialogOpen] = useState(false);
-  const [calendarDialogOpen, setCalendarDialogOpen] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const handleNotificationPermission = async () => {
     try {
@@ -154,11 +157,6 @@ function Features() {
     setDuaDialogOpen(true);
   };
 
-  // Dini günler takvimi
-  const handleCalendar = () => {
-    setCalendarDialogOpen(true);
-  };
-
   const features = [
     {
       icon: <WatchIcon />,
@@ -199,7 +197,7 @@ function Features() {
       icon: <CalendarIcon />,
       title: 'Dini Günler',
       description: 'Önemli dini günleri takip edin',
-      action: handleCalendar,
+      action: () => setIsCalendarOpen(true),
       color: '#C62828'
     },
     {
@@ -305,6 +303,7 @@ function Features() {
             </Paper>
           </Grid>
         ))}
+      
       </Grid>
 
       {/* Dialog'lar */}
@@ -394,6 +393,12 @@ function Features() {
         <DuaLibrary 
           open={duaDialogOpen} 
           onClose={() => setDuaDialogOpen(false)}
+        />
+
+        {/* Dini Günler Dialog */}
+        <IslamicCalendar
+          open={isCalendarOpen}
+          onClose={() => setIsCalendarOpen(false)}
         />
 
         {/* Snackbar */}

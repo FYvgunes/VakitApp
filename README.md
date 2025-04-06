@@ -4,7 +4,7 @@
   <p align="center">
     Modern ve kullanıcı dostu bir namaz vakitleri takip uygulaması.
     <br />
-    <a href="#demo">Demo</a>
+    <a href="https://vakit-app-fyvgunes-projects.vercel.app/">Demo</a>
     ·
     <a href="#özellikler">Özellikler</a>
     ·
