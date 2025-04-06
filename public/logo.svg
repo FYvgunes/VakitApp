@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Arka plan dairesi -->
+  <circle cx="256" cy="256" r="256" fill="#2196F3"/>
+  
+  <!-- Cami silueti -->
+  <path d="M256 80L384 160V432H128V160L256 80Z" fill="white"/>
+  <path d="M256 120L320 160V192H192V160L256 120Z" fill="#2196F3"/>
+  
+  <!-- Ana kubbe -->
+  <path d="M256 140C290 140 320 170 320 204V224H192V204C192 170 222 140 256 140Z" fill="white"/>
+  
+  <!-- Minare -->
+  <path d="M352 120L384 136V432H320V136L352 120Z" fill="white"/>
+  <path d="M352 100C363 100 372 109 372 120V140H332V120C332 109 341 100 352 100Z" fill="white"/>
+  
+  <!-- Kapı -->
+  <path d="M224 320H288V432H224V320Z" fill="#2196F3"/>
+  
+  <!-- Hilal -->
+  <path d="M236 40C246 30 266 30 276 40C256 50 256 70 276 80C266 90 246 90 236 80C256 70 256 50 236 40Z" fill="white"/>
+</svg> 
