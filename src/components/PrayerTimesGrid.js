@@ -12,6 +12,7 @@ import { getNextPrayer, calculateRemainingTime, getCurrentPrayer } from '../util
 import { getCurrentDate } from '../utils/dateUtils';
 import VerseDisplay from './VerseDisplay';
 import Features from './Features';
+import PrayerTimeCard from './PrayerTimeCard';
 
 function PrayerTimesGrid({ prayerTimes, cityName }) {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -132,71 +133,17 @@ function PrayerTimesGrid({ prayerTimes, cityName }) {
 
         {/* Namaz Vakitleri Grid */}
         <Grid container spacing={2}>
-          {Object.entries(prayerTimes).map(([key, time]) => {
-            const isCurrentPrayer = currentPrayer?.name === key;
-            const isNextPrayer = nextPrayer?.name === key;
-            
-            return (
-              <Grid item xs={4} key={key}>
-                <Paper 
-                  sx={{ 
-                    p: 2, 
-                    textAlign: 'center',
-                    borderRadius: 2,
-                    bgcolor: isCurrentPrayer 
-                      ? 'success.main'
-                      : isNextPrayer 
-                        ? 'primary.main'
-                        : 'background.paper',
-                    color: (isCurrentPrayer || isNextPrayer) 
-                      ? 'white' 
-                      : 'text.primary',
-                    transition: 'all 0.3s ease',
-                    boxShadow: isCurrentPrayer || isNextPrayer 
-                      ? '0 4px 20px rgba(0,0,0,0.2)' 
-                      : '0 2px 10px rgba(0,0,0,0.1)',
-                    '&:hover': {
-                      transform: 'translateY(-4px)',
-                      boxShadow: '0 6px 25px rgba(0,0,0,0.15)',
-                    }
-                  }}
-                >
-                  {/* Vakit İkonu */}
-                  <Box 
-                    sx={{ 
-                      mb: 1,
-                      color: isCurrentPrayer || isNextPrayer 
-                        ? 'white' 
-                        : 'primary.main'
-                    }}
-                  >
-                    {getVakitIcon(key)}
-                  </Box>
-                  
-                  <Typography 
-                    variant="body1" 
-                    sx={{ 
-                      fontWeight: isCurrentPrayer ? 'bold' : 'medium',
-                      color: 'inherit',
-                      mb: 0.5
-                    }}
-                  >
-                    {key}
-                  </Typography>
-                  <Typography 
-                    variant="h5"
-                    sx={{ 
-                      fontWeight: 'bold',
-                      color: 'inherit',
-                      letterSpacing: 1
-                    }}
-                  >
-                    {time}
-                  </Typography>
-                </Paper>
-              </Grid>
-            );
-          })}
+          {Object.entries(prayerTimes).map(([name, time]) => (
+            <Grid item xs={12} sm={6} md={4} key={name}>
+              <PrayerTimeCard
+                name={name}
+                time={time}
+                isNext={name === nextPrayer}
+                remainingTime={name === nextPrayer ? remainingTime : null}
+                prayerTimes={prayerTimes}
+              />
+            </Grid>
+          ))}
         </Grid>
 
         {/* Özellikler Başlığı */}

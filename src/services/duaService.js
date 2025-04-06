@@ -113,9 +113,10 @@ const localDuas = [
 const categories = [
   "Tüm Dualar",
   "Sabah Duaları",
+  "Öğle Duaları",
+  "İkindi Duaları",
   "Akşam Duaları",
-  "Yemek Duaları",
-  "Namaz Duaları",
+  "Yatsı Duaları",
   "Kuran Duaları",
   "Favoriler"
 ];

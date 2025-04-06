@@ -1,6 +1,4 @@
 <div align="center">
-  <img src="screenshots/banner.png" alt="Namaz Vakitleri App Banner" width="100%"/>
-  
   # 🕌 Namaz Vakitleri Uygulaması
   
   <p align="center">

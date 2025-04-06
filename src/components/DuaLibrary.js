@@ -80,6 +80,27 @@ function DuaLibrary({ open, onClose }) {
     dua.meaning.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Vakit durumunu kontrol eden fonksiyon
+  const getTimeStatus = (category) => {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    switch(category) {
+      case 'Sabah Duaları':
+        return currentHour >= 4 && currentHour < 8;
+      case 'Öğle Duaları':
+        return currentHour >= 12 && currentHour < 15;
+      case 'İkindi Duaları':
+        return currentHour >= 15 && currentHour < 18;
+      case 'Akşam Duaları':
+        return currentHour >= 18 && currentHour < 20;
+      case 'Yatsı Duaları':
+        return currentHour >= 20 || currentHour < 4;
+      default:
+        return false;
+    }
+  };
+
   return (
     <Dialog
       open={open}
@@ -198,21 +219,32 @@ function DuaLibrary({ open, onClose }) {
                 <Card 
                   key={dua.id}
                   sx={{ 
+                    bgcolor: getTimeStatus(dua.category) ? 'primary.main' : 'background.paper',
+                    color: getTimeStatus(dua.category) ? 'white' : 'text.primary',
                     '&:hover': { 
                       boxShadow: 3,
                       transform: 'translateY(-2px)',
-                      transition: 'all 0.3s ease'
+                      transition: 'all 0.3s ease',
+                      bgcolor: getTimeStatus(dua.category) 
+                        ? 'primary.dark'
+                        : 'background.paper',
                     }
                   }}
                 >
                   <CardContent>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography 
+                        variant="h6" 
+                        gutterBottom
+                        sx={{ 
+                          color: getTimeStatus(dua.category) ? 'inherit' : 'text.primary'
+                        }}
+                      >
                         {dua.title}
                       </Typography>
                       <IconButton 
                         onClick={() => handleToggleFavorite(dua.id)}
-                        color="primary"
+                        color={getTimeStatus(dua.category) ? "inherit" : "primary"}
                       >
                         {favorites.includes(dua.id) ? <BookmarkIcon /> : <BookmarkBorderIcon />}
                       </IconButton>
@@ -224,7 +256,8 @@ function DuaLibrary({ open, onClose }) {
                         mb: 2, 
                         fontFamily: 'Amiri, serif',
                         textAlign: 'right',
-                        lineHeight: 2
+                        lineHeight: 2,
+                        color: getTimeStatus(dua.category) ? 'inherit' : 'text.primary'
                       }}
                     >
                       {dua.arabic}
@@ -233,22 +266,34 @@ function DuaLibrary({ open, onClose }) {
                     {dua.transliteration && (
                       <Typography 
                         variant="body1" 
-                        color="text.secondary" 
                         paragraph
-                        sx={{ fontStyle: 'italic' }}
+                        sx={{ 
+                          fontStyle: 'italic',
+                          color: getTimeStatus(dua.category) ? 'inherit' : 'text.secondary',
+                          opacity: getTimeStatus(dua.category) ? 0.9 : 0.7
+                        }}
                       >
                         {dua.transliteration}
                       </Typography>
                     )}
 
-                    <Typography variant="body1" paragraph>
+                    <Typography 
+                      variant="body1" 
+                      paragraph
+                      sx={{ 
+                        color: getTimeStatus(dua.category) ? 'inherit' : 'text.primary'
+                      }}
+                    >
                       {dua.meaning}
                     </Typography>
 
                     <Chip 
                       label={dua.source}
                       size="small"
-                      sx={{ bgcolor: 'primary.main', color: 'white' }}
+                      sx={{ 
+                        bgcolor: getTimeStatus(dua.category) ? 'rgba(255,255,255,0.2)' : 'primary.main',
+                        color: getTimeStatus(dua.category) ? 'inherit' : 'white'
+                      }}
                     />
                   </CardContent>
                 </Card>

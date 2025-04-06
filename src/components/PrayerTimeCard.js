@@ -1,75 +1,81 @@
 import React from 'react';
-import { Paper, Typography, Box, Divider } from '@mui/material';
-import { AccessTime as TimeIcon } from '@mui/icons-material';
-import { calculateRemainingTime } from '../utils/timeUtils';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 
-function PrayerTimeCard({ title, time, isNext }) {
-  const remainingTime = calculateRemainingTime(time);
+function PrayerTimeCard({ name, time, isNext, remainingTime, prayerTimes }) {
+  // Şu anki vakti kontrol et
+  const isCurrentPrayer = () => {
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+
+    // Mevcut vakit başlangıç zamanı
+    const [currentHour, currentMinute] = time.split(':').map(Number);
+    const currentPrayerTime = currentHour * 60 + currentMinute;
+
+    // Sonraki vakit başlangıç zamanı
+    const times = Object.values(prayerTimes);
+    const currentIndex = times.findIndex(t => t === time);
+    const nextTime = times[(currentIndex + 1) % times.length];
+    const [nextHour, nextMinute] = nextTime.split(':').map(Number);
+    const nextPrayerTime = nextHour * 60 + nextMinute;
+
+    // Eğer sonraki vakit, şu anki vakitten önce ise (örn: yatsıdan sonra imsak)
+    if (nextPrayerTime < currentPrayerTime) {
+      return currentTime >= currentPrayerTime || currentTime < nextPrayerTime;
+    }
+
+    return currentTime >= currentPrayerTime && currentTime < nextPrayerTime;
+  };
+
+  const active = isCurrentPrayer();
 
   return (
-    <Paper 
-      elevation={isNext ? 3 : 1}
-      sx={{
-        p: 2,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+    <Card 
+      elevation={active ? 3 : 1}
+      sx={{ 
+        bgcolor: active ? 'primary.main' : 'background.paper',
+        color: active ? 'white' : 'text.primary',
         transition: 'all 0.3s ease',
-        backgroundColor: isNext ? 'custom.nextPrayer.background' : 'background.paper',
-        borderRadius: 2,
         '&:hover': {
-          transform: 'translateY(-5px)',
-          backgroundColor: isNext ? 'custom.nextPrayer.background' : 'custom.card.hover',
-          boxShadow: 3,
+          transform: 'translateY(-2px)',
+          boxShadow: 3
         }
       }}
     >
-      <TimeIcon 
-        sx={{ 
-          fontSize: 40, 
-          color: isNext ? 'custom.nextPrayer.text' : 'primary.main',
-          mb: 1,
-          opacity: isNext ? 1 : 0.9
-        }} 
-      />
-      <Typography 
-        variant="h6" 
-        component="h3" 
-        gutterBottom
-        color={isNext ? 'custom.nextPrayer.text' : 'text.primary'}
-        sx={{ fontWeight: isNext ? 600 : 500 }}
-      >
-        {title}
-      </Typography>
-      <Typography 
-        variant="h5" 
-        color={isNext ? 'custom.nextPrayer.text' : 'primary.main'}
-        gutterBottom
-        sx={{ fontWeight: isNext ? 600 : 500 }}
-      >
-        {time}
-      </Typography>
-      <Box sx={{ mt: 1 }}>
+      <CardContent>
         <Typography 
-          variant="body2" 
-          color={isNext ? 'custom.nextPrayer.text' : 'text.secondary'}
-          sx={{
-            opacity: isNext ? 1 : 0.8,
-            fontWeight: isNext ? 500 : 400
+          variant="h6" 
+          component="div"
+          sx={{ color: active ? 'inherit' : 'text.primary' }}
+        >
+          {name}
+        </Typography>
+        <Typography 
+          variant="h4" 
+          component="div"
+          sx={{ 
+            my: 1,
+            color: active ? 'inherit' : 'text.primary'
           }}
         >
-          {isNext ? `Kalan Süre: ${remainingTime}` : ''}
+          {time}
         </Typography>
-      </Box>
-
-      <Divider sx={{ 
-        width: '80%', 
-        my: 2,
-        opacity: isNext ? 0.2 : 0.1,
-        backgroundColor: isNext ? 'white' : 'primary.main'
-      }} />
-    </Paper>
+        {isNext && (
+          <Box 
+            sx={{ 
+              mt: 1,
+              p: 1, 
+              borderRadius: 1,
+              bgcolor: active ? 'rgba(255,255,255,0.1)' : 'action.selected',
+              color: active ? 'inherit' : 'text.secondary'
+            }}
+          >
+            <Typography variant="body2">
+              {remainingTime}
+            </Typography>
+          </Box>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
