@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+<div align="center">
+  <img src="screenshots/banner.png" alt="Namaz Vakitleri App Banner" width="100%"/>
+  
+  # 🕌 Namaz Vakitleri Uygulaması
+  
+  <p align="center">
+    Modern ve kullanıcı dostu bir namaz vakitleri takip uygulaması.
+    <br />
+    <a href="#demo">Demo</a>
+    ·
+    <a href="#özellikler">Özellikler</a>
+    ·
+    <a href="#kurulum">Kurulum</a>
+  </p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![GitHub stars](https://img.shields.io/github/stars/username/namaz-vakitleri?style=social)
+![GitHub forks](https://img.shields.io/github/forks/username/namaz-vakitleri?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/username/namaz-vakitleri?style=social)
+<br />
+![GitHub last commit](https://img.shields.io/github/last-commit/username/namaz-vakitleri)
+![GitHub issues](https://img.shields.io/github/issues/username/namaz-vakitleri)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/username/namaz-vakitleri)
 
-## Available Scripts
+</div>
 
-In the project directory, you can run:
+---
 
-### `npm start`
+# 🕌 Namaz Vakitleri Uygulaması
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Modern ve kullanıcı dostu bir namaz vakitleri takip uygulaması. React ve Material-UI ile geliştirilmiştir.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+![Uygulama Önizlemesi](preview.png)
 
-### `npm test`
+## ✨ Özellikler
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 📅 Günlük namaz vakitleri takibi
+- 🕐 Gerçek zamanlı geri sayım
+- 🌙 Hicri takvim entegrasyonu
+- 🎨 Koyu/Açık tema desteği
+- 📱 Mobil uyumlu tasarım
+- 🔔 Namaz vakti bildirimleri
+- 📍 Yakın cami bulma özelliği
+- 📖 Dua kitaplığı
+- 📅 Dini günler takvimi
+- 📿 Dijital tesbih
+- 🎵 Ezan sesi çalma
 
-### `npm run build`
+## 🔧 Teknolojiler
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- React
+- Material-UI
+- Context API
+- Local Storage
+- Service Workers
+- Progressive Web App
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 📱 Ekran Görüntüleri
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<table>
+  <tr>
+    <td>
+      <img src="screenshots/light-mode.png" alt="Ana Ekran - Light Mode" width="280"/>
+      <p align="center">Ana Ekran (Açık Tema)</p>
+    </td>
+    <td>
+      <img src="screenshots/dark-mode.png" alt="Ana Ekran - Dark Mode" width="280"/>
+      <p align="center">Ana Ekran (Koyu Tema)</p>
+    </td>
+    <td>
+      <img src="screenshots/mobile-view.png" alt="Mobil Görünüm" width="160"/>
+      <p align="center">Mobil Görünüm</p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img src="screenshots/dua-library.png" alt="Dua Kitaplığı" width="280"/>
+      <p align="center">Dua Kitaplığı</p>
+    </td>
+    <td>
+      <img src="screenshots/islamic-calendar.png" alt="Dini Günler Takvimi" width="280"/>
+      <p align="center">Dini Günler Takvimi</p>
+    </td>
+    <td>
+      <img src="screenshots/features.png" alt="Özellikler" width="160"/>
+      <p align="center">Özellikler Menüsü</p>
+    </td>
+  </tr>
+</table>
 
-### `npm run eject`
+## 📋 Yapılacaklar
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- [ ] Çoklu dil desteği
+- [ ] Kıble pusulası
+- [ ] Namaz öğreticisi
+- [ ] Kuran-ı Kerim okuyucu
+- [ ] İstatistikler ve raporlar
+- [ ] Çoklu şehir desteği
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🤝 Katkıda Bulunma
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Bu repoyu fork edin
+2. Yeni bir branch oluşturun (`git checkout -b feature/amazing-feature`)
+3. Değişikliklerinizi commit edin (`git commit -m 'feat: Add amazing feature'`)
+4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
+5. Pull Request oluşturun
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 📝 Lisans
 
-## Learn More
+Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 👏 Teşekkürler
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- [Diyanet İşleri Başkanlığı](https://namazvakti.diyanet.gov.tr/) - Namaz vakitleri verileri için
+- [Material-UI](https://mui.com/) - Harika UI bileşenleri için
+- [OpenStreetMap](https://www.openstreetmap.org/) - Cami lokasyonları için
 
-### Code Splitting
+Proje Linki: [https://github.com/your-username/namaz-vakitleri](https://github.com/your-username/namaz-vakitleri)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+⭐️ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!
