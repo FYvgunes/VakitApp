@@ -13,6 +13,7 @@ import { getCurrentDate } from '../utils/dateUtils';
 import VerseDisplay from './VerseDisplay';
 import Features from './Features';
 import PrayerTimeCard from './PrayerTimeCard';
+import { checkPrayerTime, requestNotificationPermission, testNotification } from '../services/notificationService';
 
 function PrayerTimesGrid({ prayerTimes, cityName }) {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -32,10 +33,22 @@ function PrayerTimesGrid({ prayerTimes, cityName }) {
       setRemainingTime(calculateRemainingTime(next.time));
       setCurrentTime(new Date());
       setCurrentDate(getCurrentDate());
+      
+      // Vakit kontrolü
+      checkPrayerTime(prayerTimes);
     };
 
     updateTimes();
     const timer = setInterval(updateTimes, 1000);
+    
+    // Bildirim izni iste
+    requestNotificationPermission().then(granted => {
+      if (granted) {
+        // Test bildirimi gönder
+        testNotification(prayerTimes);
+      }
+    });
+
     return () => clearInterval(timer);
   }, [prayerTimes]);
 

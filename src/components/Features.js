@@ -36,6 +36,7 @@ import { adhanService } from '../services/adhanService';
 import { findNearbyMosques } from '../services/mosqueService';
 import DuaLibrary from './DuaLibrary';
 import IslamicCalendar from './IslamicCalendar';
+import { requestNotificationPermission } from '../services/notificationService';
 
 function Features() {
   const [mosqueDialogOpen, setMosqueDialogOpen] = useState(false);
@@ -51,15 +52,13 @@ function Features() {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const handleNotificationPermission = async () => {
-    try {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        setSnackbarMessage('Bildirim izni verildi');
-        setSnackbarOpen(true);
-      }
-    } catch (error) {
-      console.error('Notification error:', error);
+    const granted = await requestNotificationPermission();
+    if (granted) {
+      setSnackbarMessage('Ezan vakti bildirimleri açıldı');
+    } else {
+      setSnackbarMessage('Bildirim izni reddedildi');
     }
+    setSnackbarOpen(true);
   };
 
   const handleFindMosques = async () => {
