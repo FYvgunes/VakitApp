@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -12,7 +12,8 @@ import {
   CardContent,
   InputBase,
   Chip,
-  Fade
+  Fade,
+  CircularProgress
 } from '@mui/material';
 import {
   Close as CloseIcon,
@@ -20,33 +21,47 @@ import {
   Bookmark as BookmarkIcon,
   BookmarkBorder as BookmarkBorderIcon
 } from '@mui/icons-material';
+import { fetchDuas, fetchDuaCategories } from '../services/duaService';
 
 function DuaLibrary({ open, onClose }) {
   const [selectedTab, setSelectedTab] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem('favoriteDuas');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [duas, setDuas] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const categories = [
-    'Sabah Duaları',
-    'Akşam Duaları',
-    'Yemek Duaları',
-    'Namaz Duaları',
-    'Kuran Duaları'
-  ];
+  useEffect(() => {
+    const loadDuas = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const [duasData, categoriesData] = await Promise.all([
+          fetchDuas(),
+          fetchDuaCategories()
+        ]);
+        setDuas(duasData);
+        setCategories(categoriesData);
+      } catch (error) {
+        setError('Dualar yüklenirken bir hata oluştu');
+        console.error('Dua yükleme hatası:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const duas = {
-    'Sabah Duaları': [
-      {
-        id: 1,
-        title: 'Sabah Duası',
-        arabic: 'اَللّٰهُمَّ بِكَ اَصْبَحْنَا وَبِكَ اَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَاِلَيْكَ النُّشُورُ',
-        meaning: 'Allah'ım! Senin rahmetinle sabahladık, senin rahmetinle akşamladık. Senin sayende yaşar, senin sayende ölürüz. En son dönüşümüz de sanadır.',
-        source: 'Tirmizi, Daavat, 13'
-      },
-      // ... diğer dualar
-    ],
-    // ... diğer kategoriler
-  };
+    if (open) {
+      loadDuas();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    localStorage.setItem('favoriteDuas', JSON.stringify(favorites));
+  }, [favorites]);
 
   const handleToggleFavorite = (duaId) => {
     setFavorites(prev => 
@@ -56,7 +71,11 @@ function DuaLibrary({ open, onClose }) {
     );
   };
 
-  const filteredDuas = duas[categories[selectedTab]]?.filter(dua =>
+  const filteredDuas = duas.filter(dua => {
+    if (selectedTab === 0) return true;
+    if (selectedTab === categories.length - 1) return favorites.includes(dua.id);
+    return dua.category === categories[selectedTab];
+  }).filter(dua =>
     dua.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     dua.meaning.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -68,8 +87,23 @@ function DuaLibrary({ open, onClose }) {
       maxWidth="md"
       fullWidth
       TransitionComponent={Fade}
+      PaperProps={{
+        sx: {
+          height: '90vh',
+          maxHeight: '90vh'
+        }
+      }}
     >
-      <DialogTitle>
+      <DialogTitle
+        sx={{
+          position: 'sticky',
+          top: 0,
+          bgcolor: 'background.paper',
+          zIndex: 1,
+          borderBottom: 1,
+          borderColor: 'divider'
+        }}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant="h6">Dua Kitaplığı</Typography>
           <IconButton onClick={onClose}>
@@ -77,7 +111,6 @@ function DuaLibrary({ open, onClose }) {
           </IconButton>
         </Box>
         
-        {/* Arama Kutusu */}
         <Box 
           sx={{ 
             mt: 2,
@@ -100,76 +133,129 @@ function DuaLibrary({ open, onClose }) {
         </Box>
       </DialogTitle>
 
-      <DialogContent>
-        <Tabs
-          value={selectedTab}
-          onChange={(e, newValue) => setSelectedTab(newValue)}
-          variant="scrollable"
-          scrollButtons="auto"
-          sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}
-        >
-          {categories.map((category, index) => (
-            <Tab 
-              key={index} 
-              label={category}
-              sx={{ 
-                textTransform: 'none',
-                fontWeight: selectedTab === index ? 'bold' : 'normal'
-              }}
-            />
-          ))}
-        </Tabs>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {filteredDuas?.map((dua) => (
-            <Card 
-              key={dua.id}
-              sx={{ 
-                '&:hover': { 
-                  boxShadow: 3,
-                  transform: 'translateY(-2px)',
-                  transition: 'all 0.3s ease'
-                }
-              }}
+      <DialogContent 
+        sx={{ 
+          p: 2,
+          overflowY: 'auto',
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'rgba(0,0,0,0.1)',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'rgba(0,0,0,0.2)',
+            borderRadius: '4px',
+            '&:hover': {
+              background: 'rgba(0,0,0,0.3)',
+            }
+          }
+        }}
+      >
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Typography color="error" sx={{ textAlign: 'center', my: 4 }}>
+            {error}
+          </Typography>
+        ) : (
+          <>
+            <Tabs
+              value={selectedTab}
+              onChange={(e, newValue) => setSelectedTab(newValue)}
+              variant="scrollable"
+              scrollButtons="auto"
+              sx={{ mb: 3, borderBottom: 1, borderColor: 'divider' }}
             >
-              <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                  <Typography variant="h6" gutterBottom>
-                    {dua.title}
-                  </Typography>
-                  <IconButton 
-                    onClick={() => handleToggleFavorite(dua.id)}
-                    color="primary"
-                  >
-                    {favorites.includes(dua.id) ? <BookmarkIcon /> : <BookmarkBorderIcon />}
-                  </IconButton>
-                </Box>
-
-                <Typography 
-                  variant="h6" 
+              {categories.map((category, index) => (
+                <Tab 
+                  key={index} 
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      {category}
+                      {category === 'Favoriler' && favorites.length > 0 && (
+                        <Chip 
+                          label={favorites.length} 
+                          size="small" 
+                          color="primary"
+                        />
+                      )}
+                    </Box>
+                  }
                   sx={{ 
-                    mb: 2, 
-                    fontFamily: 'Amiri, serif',
-                    textAlign: 'right',
-                    lineHeight: 2
+                    textTransform: 'none',
+                    fontWeight: selectedTab === index ? 'bold' : 'normal'
+                  }}
+                />
+              ))}
+            </Tabs>
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {filteredDuas.map((dua) => (
+                <Card 
+                  key={dua.id}
+                  sx={{ 
+                    '&:hover': { 
+                      boxShadow: 3,
+                      transform: 'translateY(-2px)',
+                      transition: 'all 0.3s ease'
+                    }
                   }}
                 >
-                  {dua.arabic}
-                </Typography>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                      <Typography variant="h6" gutterBottom>
+                        {dua.title}
+                      </Typography>
+                      <IconButton 
+                        onClick={() => handleToggleFavorite(dua.id)}
+                        color="primary"
+                      >
+                        {favorites.includes(dua.id) ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+                      </IconButton>
+                    </Box>
 
-                <Typography variant="body1" color="text.secondary" paragraph>
-                  {dua.meaning}
-                </Typography>
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        mb: 2, 
+                        fontFamily: 'Amiri, serif',
+                        textAlign: 'right',
+                        lineHeight: 2
+                      }}
+                    >
+                      {dua.arabic}
+                    </Typography>
 
-                <Chip 
-                  label={dua.source}
-                  size="small"
-                  sx={{ bgcolor: 'primary.main', color: 'white' }}
-                />
-              </CardContent>
-            </Card>
-          ))}
-        </Box>
+                    {dua.transliteration && (
+                      <Typography 
+                        variant="body1" 
+                        color="text.secondary" 
+                        paragraph
+                        sx={{ fontStyle: 'italic' }}
+                      >
+                        {dua.transliteration}
+                      </Typography>
+                    )}
+
+                    <Typography variant="body1" paragraph>
+                      {dua.meaning}
+                    </Typography>
+
+                    <Chip 
+                      label={dua.source}
+                      size="small"
+                      sx={{ bgcolor: 'primary.main', color: 'white' }}
+                    />
+                  </CardContent>
+                </Card>
+              ))}
+            </Box>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

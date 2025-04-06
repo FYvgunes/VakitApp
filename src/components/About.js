@@ -59,7 +59,7 @@ function About() {
         <Typography variant="body2">
           Öneri ve şikayetleriniz için:
           <Link href="mailto:contact@example.com" sx={{ ml: 1 }}>
-            contact@example.com
+            veysel.gunes36@gmail.co
           </Link>
         </Typography>
       </Box>

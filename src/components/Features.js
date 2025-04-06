@@ -32,6 +32,7 @@ import {
 } from '@mui/icons-material';
 import { adhanService } from '../services/adhanService';
 import { findNearbyMosques } from '../services/mosqueService';
+import DuaLibrary from './DuaLibrary';
 
 function Features() {
   const [mosqueDialogOpen, setMosqueDialogOpen] = useState(false);
@@ -191,7 +192,7 @@ function Features() {
       icon: <DuaIcon />,
       title: 'Dua Kitaplığı',
       description: 'Günlük duaları görüntüleyin',
-      action: handleDuaLibrary,
+      action: () => setDuaDialogOpen(true),
       color: '#4527A0'
     },
     {
@@ -388,6 +389,12 @@ function Features() {
             </Box>
           </DialogContent>
         </Dialog>
+
+        {/* Dua Kitaplığı Dialog */}
+        <DuaLibrary 
+          open={duaDialogOpen} 
+          onClose={() => setDuaDialogOpen(false)}
+        />
 
         {/* Snackbar */}
         <Snackbar
