@@ -29,7 +29,7 @@
 
 Modern ve kullanıcı dostu bir namaz vakitleri takip uygulaması. React ve Material-UI ile geliştirilmiştir.
 
-![Uygulama Önizlemesi](https://vakit-app-fyvgunes-projects.vercel.app/)
+Uygulama linki: https://vakit-app-fyvgunes-projects.vercel.app/
 
 ## ✨ Özellikler
 
